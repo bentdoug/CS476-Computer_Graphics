@@ -1,0 +1,1 @@
+This folder contains documents, projects, etc from CS-476 :)
