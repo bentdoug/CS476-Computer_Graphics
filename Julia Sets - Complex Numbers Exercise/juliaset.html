@@ -1,0 +1,30 @@
+<html>
+<head>
+<!-- This is how you include external scripts in Javascript !-->
+<script src= "juliaset.js"></script>
+<script src= "dat.gui.min.js"></script>
+<style>
+    div#canvasarea {
+    width: 90%;
+    height: 90%;
+    float: left;
+    }
+</style>
+</head>
+<body>
+
+    <p id = "time"></p>
+    <div id="canvasArea">
+        <canvas id = "juliaCanvas" style="border:1px solid #000000;">
+        </canvas>
+    </div>
+
+
+    <script>
+        const canvas = new JuliaSet("canvasArea", "juliaCanvas");
+        canvas.repaint();
+    </script>
+
+
+</body>
+</html>

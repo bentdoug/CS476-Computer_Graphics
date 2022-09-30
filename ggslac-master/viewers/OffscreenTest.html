@@ -1,0 +1,79 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--External Libraries!-->
+<!--<script type="text/javascript" src="js/gl-matrix.js"></script>!-->
+<script type="text/javascript" src = "../jslibs/dat.gui.min.js"></script>
+<script type="text/javascript" src = "../jslibs/gl-matrix-min.js"></script>
+<script type="text/javascript" src="../jslibs/webgl-utils.js"></script>
+<script type="text/javascript" src="../jslibs/webgl-debug.js"></script>
+<script type="text/javascript" src="../jslibs/jquery-3.5.1.min.js"></script>
+
+<!--Our Scripts!-->
+<script src="../geometry/polymesh.js"></script>
+<script src="../geometry/basicmesh.js"></script>
+<script src="../geometry/primitives3d.js"></script>
+<script src="../geometry/cameras3d.js"></script>
+<script src="../shaders/shaders.js"></script>
+<script src="../utils/simpledraw.js"></script>
+<script src="./basecanvas.js"></script>
+<script src="./simplemeshcanvas.js"></script>
+<script src="./offscreen.js"></script>
+</head>
+
+<body>
+
+<table>
+<tr><td>
+<canvas id="MainGLCanvas" style="border: none;" width="400" height="400"></canvas>
+</td>
+<td>
+<canvas id="osCanvas" style="border: none;" width="400" height="400"></canvas>
+</td></tr>
+</table>
+
+<script>
+    let glcanvas = document.getElementById("MainGLCanvas");
+    glcanvas.addEventListener("contextmenu", function(e){ e.stopPropagation(); e.preventDefault(); return false; }); //Need this to disable the menu that pops up on right clicking
+    let offscreen = new OffscreenRender(glcanvas, "../shaders/");
+    offscreen.setupShader("texCardboard");
+
+    let ctx = glcanvas.getContext("2d");
+    for (let i = 0; i < 600; i += 50) {
+        ctx.moveTo(0, i);
+        ctx.lineTo(600, i);
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+    for (let i = 0; i < 600; i += 50) {
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, 600);
+        ctx.strokeStyle = "red";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+    
+    let params = {"k1":0.33582564, "k2":0.55348791};
+    let elem = document.getElementById("osCanvas");
+    let ctx2 = elem.getContext("2d");
+
+    function repaint() {
+        offscreen.render(params.k1, params.k2);
+        ctx2.drawImage(offscreen.glcanvas, 0, 0);
+    }
+
+    this.gui = new dat.GUI();
+    const gui = this.gui;
+    gui.add(params, 'k1').listen().onChange(repaint);
+    gui.add(params, 'k2').listen().onChange(repaint);
+    setTimeout(function() {
+        offscreen.updateTexture();
+        repaint();
+    }, 1000);
+
+</script>
+
+</body>
+</html>
